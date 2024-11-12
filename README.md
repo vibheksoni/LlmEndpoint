@@ -46,7 +46,7 @@ Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text gen
 
 ## Base URL
 
-`https://llmendpoint.com/api/v1/completions`
+`https://llmendpoint.com`
 
 ## Endpoint Overview
 
