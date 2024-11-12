@@ -15,6 +15,31 @@ Instructions to get started with the LlmEndpoint modules and API documentation.
 
 Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text generation API designed for a wide range of applications. This documentation provides details on using the `/api/v1/completions` endpoint.
 
+# Models Available
+
+|-------------------|
+| Model Name        |
+|-------------------|
+| llama3.1          |
+| llama3            |
+| llama2            |
+| mistral           |
+| qwen              |
+| gemma2            |
+| llama3.2          |
+| qwen2             |
+| zephyr            |
+| gemma             |
+| llava             |
+| mistral-nemo      |
+| phi3              |
+| wizardlm2         |
+| orca-mini         |
+| codellama         |
+| llama2-uncensored |
+| owl_t-lite        |
+|-------------------|
+
 ---
 
 ## Base URL
@@ -115,8 +140,6 @@ For streamed responses, you will receive chunks like this:
 - Ensure your IP is whitelisted if IP restrictions are enabled on your API key.
 - Streaming responses provide partial responses, chunked by tokens.
 - Each user has a credit balance; ensure sufficient credits to complete requests.
-
-For more assistance, visit [LlmEndpoint Support](https://support.llmendpoint.com).
 
 ---
 
