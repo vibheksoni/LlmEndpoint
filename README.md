@@ -17,6 +17,8 @@ Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text gen
 
 # Models Available
 
+<div align="center">
+
 | Model Name        |
 |-------------------|
 | llama3.1          |
@@ -37,6 +39,8 @@ Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text gen
 | codellama         |
 | llama2-uncensored |
 | owl_t-lite        |
+
+</div>
 
 ---
 
