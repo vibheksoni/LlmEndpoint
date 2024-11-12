@@ -37,7 +37,6 @@ Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text gen
 | codellama         |
 | llama2-uncensored |
 | owl_t-lite        |
-|-------------------|
 
 ---
 
