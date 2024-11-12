@@ -17,7 +17,6 @@ Welcome to the LlmEndpoint API documentation. LlmEndpoint is a low-cost text gen
 
 # Models Available
 
-|-------------------|
 | Model Name        |
 |-------------------|
 | llama3.1          |
