@@ -7,7 +7,7 @@ class LlmEndpointClient:
 
     def __init__(self, api_key: str):
         self.api_key = api_key
-
+    
     def generate_completion(self, messages, model, max_tokens, output_format="default", temperature=0.7, num_context=2048, stream=False):
         """
         Generate completion for the given messages
@@ -37,20 +37,20 @@ class LlmEndpointClient:
             "stream": stream,
             "output_format": output_format
         }
-        response = requests.post(self.BASE_URL, json=data, headers=headers)
-        
-        '''
-        Failed Response:
-        {
-            'message': '',  // Possible error messages: 'Invalid request', ''Authorization header required', 'Invalid API key', 'Unauthorized IP address', 'Model pricing not found', 'messages, model, max_tokens, and temperature are required', ...
-        '''
+        response = requests.post(self.BASE_URL, json=data, headers=headers, stream=stream)
 
         if response.status_code == 200:
-            return response.json()
+            if stream:
+                for line in response.iter_lines():
+                    if line:
+                        decoded_line = line.decode('utf-8')
+                        yield decoded_line
+            else:
+                yield response.json()
         else:
             response_data = response.json()
             raise Exception(f"Error {response.status_code}: {response_data.get('message', 'Unknown error')}")
-
+    
     def queue_completion(self, messages, model, max_tokens, output_format="default", temperature=0.7, num_context=2048):
         """
         Queue a new completion request for asynchronous processing
@@ -124,7 +124,7 @@ class LlmEndpointClient:
         '''
 
         if response.status_code == 200:
-            return response.json()  # Includes task status, result if completed
+            return response.json()
         else:
             response_data = response.json()
             raise Exception(f"Error {response.status_code}: {response_data.get('message', 'Unknown error')}")
