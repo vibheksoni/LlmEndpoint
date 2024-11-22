@@ -1,9 +1,9 @@
 import requests
 
 class LlmEndpointClient:
-    BASE_URL = "https://llmendpoint.com/api/v1/completions"
-    QUEUE_URL = "https://llmendpoint.com/api/v1/qcompletions"
-    STATUS_URL = "https://llmendpoint.com/api/v1/qcompletions"
+    BASE_URL    = "https://llmendpoint.com/api/v1/completions"
+    QUEUE_URL   = "https://llmendpoint.com/api/v1/qcompletions"
+    STATUS_URL  = "https://llmendpoint.com/api/v1/qcompletions"
 
     def __init__(self, api_key: str):
         self.api_key = api_key
@@ -37,16 +37,13 @@ class LlmEndpointClient:
             "stream": stream,
             "output_format": output_format
         }
-        response = requests.post(self.BASE_URL, json=data, headers=headers, stream=stream)
+        response = requests.post(self.BASE_URL, json=data, headers=headers, stream=stream) if stream else requests.post(self.BASE_URL, json=data, headers=headers)
 
         if response.status_code == 200:
             if stream:
-                for line in response.iter_lines():
-                    if line:
-                        decoded_line = line.decode('utf-8')
-                        yield decoded_line
+                return response.iter_lines()
             else:
-                yield response.json()
+                return response.json()
         else:
             response_data = response.json()
             raise Exception(f"Error {response.status_code}: {response_data.get('message', 'Unknown error')}")
