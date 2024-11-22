@@ -9,9 +9,10 @@ class LlmEndpointClient {
   }
 
   // Method to generate a completion immediately
-  async generateCompletion(messages, model, maxTokens, temperature = 0.7, numContext = 2048, stream = false) {
+  async generateCompletion(messages, model, maxTokens, temperature = 0.7, numContext = 2048, stream = false, outputFormat = "default", onChunk = null) {
     const headers = {
-      'Authorization': this.apiKey
+      'Authorization': this.apiKey,
+      'Content-Type': 'application/json'
     };
     const data = {
       messages: messages,
@@ -19,12 +20,22 @@ class LlmEndpointClient {
       max_tokens: maxTokens,
       temperature: temperature,
       num_context: numContext,
-      stream: stream
+      stream: stream,
+      output_format: outputFormat
     };
 
     try {
-      const response = await axios.post(this.baseUrl, data, { headers: headers });
-      return response.data;
+      const response = await axios.post(this.baseUrl, data, { headers: headers, responseType: stream ? 'stream' : 'json' });
+      if (stream && onChunk) {
+        response.data.on('data', chunk => {
+          const decodedChunk = chunk.toString('utf-8');
+          if (onChunk) {
+            onChunk(decodedChunk);
+          }
+        });
+      } else {
+        return response.data;
+      }
     } catch (error) {
       throw new Error(`Error ${error.response.status}: ${error.response.data.message || 'Unknown error'}`);
     }
@@ -33,7 +44,8 @@ class LlmEndpointClient {
   // Method to queue a completion request
   async queueCompletion(messages, model, maxTokens, temperature = 0.7, numContext = 2048, outputFormat = "default") {
     const headers = {
-      'Authorization': this.apiKey
+      'Authorization': this.apiKey,
+      'Content-Type': 'application/json'
     };
     const data = {
       messages: messages,
@@ -46,8 +58,6 @@ class LlmEndpointClient {
 
     try {
       const response = await axios.post(this.queueUrl, data, { headers: headers });
-      
-      // Checking if the response indicates success or failure
       if (response.data.success) {
         return response.data;  // Includes task_id and message
       } else {
@@ -61,13 +71,13 @@ class LlmEndpointClient {
   // Method to check the status of a queued task
   async checkTaskStatus(taskId) {
     const headers = {
-      'Authorization': this.apiKey
+      'Authorization': this.apiKey,
+      'Content-Type': 'application/json'
     };
     const url = `${this.statusUrl}/${taskId}`;
 
     try {
       const response = await axios.get(url, { headers: headers });
-      
       if (response.data.success) {
         return response.data;  // Includes task status and result if completed
       } else {
